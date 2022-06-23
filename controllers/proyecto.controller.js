@@ -42,11 +42,37 @@ exports.editarProyecto = async (req,res) => {
 
     try {
         //revisar el id del proyecto, si existe o no
-
-        //verificar el creador del proyecto
-
-        //actualizar el proyecto
+        let proyecto = await Proyecto.findById(req.params.id)
+        if (!proyecto) return res.status(404).json({mensaje: 'proyecto no ecnontrado'})
         
+        //verificar el creador del proyecto
+        if (proyecto.dueño.toString() !== req.usuario.id) {
+            return res.status(401).json({mensaje: 'No autorizado'})
+        }
+        //actualizar el proyecto
+        proyecto = await Proyecto.findByIdAndUpdate({_id: req.params.id}, {set: proyectoEditado}, {new: true});
+        
+        res.json({proyecto})
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({mensaje: 'algo salio mal'});
+    }
+}
+
+exports.eliminarProyecto = async (req,res) => {
+    try {
+        //revisar el id del proyecto, si existe o no
+        let proyecto = await Proyecto.findById(req.params.id)
+        if (!proyecto) return res.status(404).json({mensaje: 'proyecto no ecnontrado'})
+        
+        //verificar el creador del proyecto
+        if (proyecto.dueño.toString() !== req.usuario.id) {
+            return res.status(401).json({mensaje: 'No autorizado'})
+        }
+        //actualizar el proyecto
+        await Proyecto.findOneAndRemove({_id: req.params.id});
+        res.status(200).json({mensaje: 'proyecto eliminado'})
+
     } catch (error) {
         console.log(error);
         res.status(500).json({mensaje: 'algo salio mal'});

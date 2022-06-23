@@ -10,17 +10,28 @@ router.post('/',
     [
         check('nombre', 'El nombre del proyecto es obligatorio').not().isEmpty()
     ],
-    proyectoController.crearProyecto);
+    proyectoController.crearProyecto
+);
 
-router.get('/', authMiddleware, proyectoController.obtenerProyectos);
+router.get('/',
+    authMiddleware,
+    proyectoController.obtenerProyectos
+);
 //aquí el auth hace la autenticacion del usuario, y si esta bien ejecuta el controller
 
+//editar un proyecto
 router.put('/:id',
     authMiddleware,
     [
         check('nombre', 'EL nombre del proyecto es obligatorio').not().isEmpty()
     ],
-    proyectoController.editarProyecto);
+    proyectoController.editarProyecto
+);
 
+//eliminar un proyecto
+router.delete('/:id',
+    authMiddleware,
+    proyectoController.eliminarProyecto
+);
 
 module.exports = router;
