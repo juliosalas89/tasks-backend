@@ -4,11 +4,6 @@ const { validationResult } = require('express-validator');
 const jwt = require('jsonwebtoken');
 
 exports.autenticarUsuario = async (req,res) => {
-    const errores = validationResult(req)
-    if (!errores.isEmpty()) {
-        return res.status(400).json({ errores: errores.array() })
-    }
-    
     const { email, password } = req.body;
 
     try {
@@ -21,7 +16,7 @@ exports.autenticarUsuario = async (req,res) => {
         //una vez verificado el usuario tenemos que verificar el password
         const passCorrecto = await bcryptjs.compare(password, usuario.password);
         if(!passCorrecto) {
-            return res.status(400).json({msg: 'Password incorrecto'})
+            return res.status(400).json({mensaje: 'Password incorrecto'})
         }
 
         //si todo es correcto entonces creamos el jwt, igual que cuando creamos un usuario nuevo:
@@ -40,5 +35,16 @@ exports.autenticarUsuario = async (req,res) => {
 
     } catch (error) {
         console.log(error)
+    }
+};
+
+exports.usuarioAutenticado = async (req,res) => {
+    try {
+        const usuarioAutenticado = await Usuario.findById(req.usuario.id).select('-password');
+        //con el .select('-password') le estoy diciendo que envie todo menos el password
+        res.json({usuarioAutenticado})
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({mensaje: 'Algo salio mal'})
     }
 }

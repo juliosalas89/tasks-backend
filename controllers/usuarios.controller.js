@@ -9,7 +9,6 @@ exports.crearUsuario = async (req, res) => {
         return res.status(400).json({ errores: errores.array() })
     }
     const { email, password } = req.body
-    console.log(password)
     try {
         //Revvisamos que el usuario registrado sea unico:
         let usuario = await Usuario.findOne({ email })
@@ -38,7 +37,7 @@ exports.crearUsuario = async (req, res) => {
         }
 
         jwt.sign(payload, process.env.SECRETA, {
-            expiresIn: 3600
+            expiresIn: 36000
         }, (error, token) => {
             if (error) throw error;
 

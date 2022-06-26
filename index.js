@@ -1,12 +1,17 @@
 const express = require('express');
 //importamos la funcion de conexion a la BD
 const conectarDB = require('./config/db.js')
+//importamos cors
+const cors = require('cors');
 
 //creamos un servidor
 const app = express();
 
 //ejecutamos la funcion de conexion a la DB, importada desde db.js:
 conectarDB();
+
+//habilitamos cors
+app.use(cors())
 
 //Habilitamos express.json, nos permitira leer archivos json
 app.use(express.json({ extend: true }))
