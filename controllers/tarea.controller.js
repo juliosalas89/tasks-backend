@@ -32,7 +32,7 @@ exports.agregarTarea = async (req, res) => {
 
 exports.obtenerTareasDeProyecto = async (req,res) => {
     //extraer el proyecto de la tarea 
-    const { proyectoId } = req.body;
+    const { proyectoId } = req.query;
     
     try {
         //controlar si existe
@@ -44,7 +44,7 @@ exports.obtenerTareasDeProyecto = async (req,res) => {
             return res.status(400).json({mensaje: 'no autorizado'});
         }
         
-        const tareas = await Tarea.find({ proyectoId });
+        const tareas = await Tarea.find({ proyectoId }).sort({ fecha: -1 });
         res.json({tareas});
 
     } catch (error) {
@@ -88,7 +88,7 @@ exports.editarTarea = async (req,res) => {
 
 exports.eliminarTarea = async (req,res) => {
     
-    const { proyectoId } = req.body;
+    const { proyectoId } = req.query;
 
     try {
         //controlar si existe la tarea que se esta editando
