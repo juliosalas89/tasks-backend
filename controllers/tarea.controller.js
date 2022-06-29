@@ -73,8 +73,8 @@ exports.editarTarea = async (req,res) => {
         }
         
         const tareaEditada = {};
-        if(nombre) tareaEditada.nombre = nombre;
-        if(estado) tareaEditada.estado = estado;
+        tareaEditada.nombre = nombre;
+        tareaEditada.estado = estado;
 
         tarea = await Tarea.findOneAndUpdate({_id: req.params.id}, tareaEditada, {new: true});
         res.json(tarea);
