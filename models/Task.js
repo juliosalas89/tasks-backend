@@ -1,24 +1,24 @@
 const mongoose = require('mongoose');
 
 
-const TareaSchema = mongoose.Schema({
-    nombre:{
+const TaskSchema = mongoose.Schema({
+    name:{
         type: String,
         required: true,
         trim: true
     },
-    estado: {
+    state: {
         type: Boolean,
         default: false
     },
-    fecha: {
+    date: {
         type: Date,
         default: Date.now()
     },
-    proyectoId: {
+    projectId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Proyecto'
+        ref: 'Project'
     }
 });
 
-module.exports = mongoose.model('Tarea', TareaSchema);
+module.exports = mongoose.model('Task', TaskSchema);

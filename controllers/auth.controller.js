@@ -1,32 +1,23 @@
-const Usuario = require('../models/Usuario.js')
+const User = require('../models/User.js')
 const bcryptjs = require('bcryptjs');
-const { validationResult } = require('express-validator');
 const jwt = require('jsonwebtoken');
 
-exports.autenticarUsuario = async (req,res) => {
+exports.authenticateUser = async (req,res) => {
     const { email, password } = req.body;
 
     try {
-        //primero vemos si existe el usuario, buscado su email:
-        let usuario = await Usuario.findOne({ email });
-        if (!usuario) {
-            return res.status(400).json({mensaje: 'La dirección de correo no pertenece a una cuenta registrada'})
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(400).json({ message: "This email doesn't match with any registered user" })
         }
         
-        //una vez verificado el usuario tenemos que verificar el password
-        const passCorrecto = await bcryptjs.compare(password, usuario.password);
-        if(!passCorrecto) {
-            return res.status(400).json({mensaje: 'Password incorrecto'})
+        const correctPassword = await bcryptjs.compare(password, user.password);
+        if(!correctPassword) {
+            return res.status(400).json({mensaje: 'Invalid Password'})
         }
 
-        //si todo es correcto entonces creamos el jwt, igual que cuando creamos un usuario nuevo:
-        //crear y firmar el jwt:
-        const payload = {
-            usuario: {
-                id: usuario.id
-            }
-        }
-        jwt.sign(payload, process.env.SECRETA, {
+        const payload = { user: { id: user.id } }
+        jwt.sign(payload, process.env.SECRET, {
             expiresIn: 3600
         }, (error, token) => {
             if (error) throw error;
@@ -38,13 +29,12 @@ exports.autenticarUsuario = async (req,res) => {
     }
 };
 
-exports.usuarioAutenticado = async (req,res) => {
+exports.authenticatedUser = async (req,res) => {
     try {
-        const usuarioAutenticado = await Usuario.findById(req.usuario.id).select('-password');
-        //con el .select('-password') le estoy diciendo que envie todo menos el password
-        res.json({usuarioAutenticado})
+        const authenticatedUser = await User.findById(req.user.id).select('-password');
+        res.json({authenticatedUser})
     } catch (error) {
         console.log(error);
-        res.status(500).json({mensaje: 'Algo salio mal'})
+        res.status(500).json({mensaje: 'Something went wrong'})
     }
 }
