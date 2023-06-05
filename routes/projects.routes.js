@@ -25,7 +25,7 @@ router.put('/:id',
     projectsController.editProject
 );
 
-//eliminar un proyecto
+//eliminar un project
 router.delete('/:id',
     authMiddleware,
     projectsController.deleteProject

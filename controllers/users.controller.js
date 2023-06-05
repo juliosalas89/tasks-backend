@@ -14,7 +14,7 @@ exports.insertUser = async (req, res) => {
 
         if (user) {
             return res.status(400).json({
-                mensaje: 'There is already a User registered with this email.'
+                message: 'There is already a User registered with this email.'
             })
         }
         user = new User(req.body)

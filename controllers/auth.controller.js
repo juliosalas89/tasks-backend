@@ -8,12 +8,12 @@ exports.authenticateUser = async (req,res) => {
     try {
         const user = await User.findOne({ email });
         if (!user) {
-            return res.status(400).json({ message: "This email doesn't match with any registered user" })
+            return res.status(400).json({ message: "This email doesn't match any registered user" })
         }
         
         const correctPassword = await bcryptjs.compare(password, user.password);
         if(!correctPassword) {
-            return res.status(400).json({mensaje: 'Invalid Password'})
+            return res.status(400).json({message: 'Invalid Password'})
         }
 
         const payload = { user: { id: user.id } }
@@ -35,6 +35,6 @@ exports.authenticatedUser = async (req,res) => {
         res.json({authenticatedUser})
     } catch (error) {
         console.log(error);
-        res.status(500).json({mensaje: 'Something went wrong'})
+        res.status(500).json({message: 'Something went wrong'})
     }
 }
